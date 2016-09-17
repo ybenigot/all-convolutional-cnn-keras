@@ -1,0 +1,163 @@
+todo :
+- reduce learning rate
+- NanGuardMode
+- close opened images use ion()
+- data augmentation : tra	nslation, then affine (rotation, distortion) by keras
+
+
+mean of all pixels is slightly dependant of color, as well as std dev
+- substract mean per sample per color
+- do not correct variance
+- apply pca whitening
+- if using pca goal is to retain 99% variance (probably not applicable here)
+-> next understand numpy eigenvectors
+
+mean+variance per sample :
+Epoch 56/100
+45000/45000 [==============================] - 152s - loss: 0.6540 - acc: 0.7718 - val_loss: 0.7994 - val_acc: 0.7390
+Epoch 57/100
+45000/45000 [==============================] - 152s - loss: 0.6495 - acc: 0.7738 - val_loss: 0.7852 - val_acc: 0.7456
+Epoch 58/100
+45000/45000 [==============================] - 152s - loss: 0.6392 - acc: 0.7766 - val_loss: 0.7757 - val_acc: 0.7462
+Epoch 59/100
+45000/45000 [==============================] - 152s - loss: 0.6341 - acc: 0.7796 - val_loss: 0.7790 - val_acc: 0.7384
+Epoch 60/100
+45000/45000 [==============================] - 152s - loss: 0.6269 - acc: 0.7821 - val_loss: 0.7757 - val_acc: 0.7376
+Epoch 61/100
+45000/45000 [==============================] - 152s - loss: 0.6244 - acc: 0.7807 - val_loss: 0.7637 - val_acc: 0.7498
+Epoch 62/100
+45000/45000 [==============================] - 155s - loss: 0.6176 - acc: 0.7823 - val_loss: 0.7597 - val_acc: 0.7464
+
+76%
+
+numpy PCA : sigma = x.dot(x.T)  uses too much memory
+
+init he_normal
+Epoch 1/1
+45000/45000 [==============================] - 476s - loss: 1.7333 - acc: 0.3760 - val_loss: 1.5369 - val_acc: 0.4894
+accuracy on test data:  48.3 %
+prediction: truck actual value: truck
+>>> 
+Yvess-MacBook-Pro:keras yves$ python
+
+retest without leaky relu : 0.3 -> 0.0.3 worse
+tune dropout according to 2014 article
+augmentation
+more maps
+max_norm value 3 or 4
+
+128 maps base
+batch 128
+lambda 0.03
+100 epochs
+dropout 0.1 02 0.3 0.4
+epoch 38 90% 80% overfit
+epoch 96 95% 80% overfit
+epoch 100 97,5% 80% overfit
+
+set dropout to 0.5 0.5 0.5 0.5
+epoch 16 both at 15%
+
+set dropout to 0.3 0.3 0.3 0.3
+same as 0.1 0.2 0.3 0.4 95% 78% at epoch 72
+
+set dropout 0.4 0.4 0.4 0.4 0.4
+test: 76.4% fit 90.5%
+
+regularization L2 54% on test data on 50 batches 67% on train
+
+looking at VGG on ILSVRC 2014
+- no leaky relu
+- L2 multiplier = 0.0005, dropout on first two FC layers, learning rate 0.01
+- size of maps multiplied by 2 each convolution
+- convolution layer padding 1 -> border same
+
+97,5% 82% 50 epoch
+
+add little L2
+
+acc train 99% test 80%
+
+next : try convnet, introduce generator for augmentation (compute validation data first)
+smaller FC ?
+augmentation set for training, not yer for testing
+
+45000/45000 [==============================] - 252s - loss: 1.6781 - acc: 0.8650 - val_loss: 0.4319 - val_acc: 0.8520
+Epoch 50/50
+45000/45000 [==============================] - 252s - loss: 1.6670 - acc: 0.8634 - val_loss: 0.4311 - val_acc: 0.8474Using Theano backend.
+Using gpu device 0: GeForce GT 730 (CNMeM is disabled, cuDNN 5004)
+
+accuracy on test data:  83.99 %
+
+16/06 : batches 100, augmentation translation 0.2, rotation none, test : 86.6 % , train : 88.16%
+
+options :
+- rotation augmentation
+- batch normalization -> is key because we could avoid dropout and use sigmoids
+- additional convnet layer 
+
+with rotation, results are slightly better (dropout=0 0 0 0 0.5 0)
+45000/45000 [==============================] - 274s - loss: 1.3343 - acc: 0.8274 - val_loss: 0.4096 - val_acc: 0.8576
+accuracy on test data:  85.17 %
+
+with batch normalization:
+45000/45000 [==============================] - 1357s - loss: 0.7389 - acc: 0.8576 - val_loss: 0.3976 - val_acc: 0.8644
+Epoch 45/100
+
+Epoch 55/100
+44800/45000 [============================>.] - ETA: 2s - loss: 0.7926 - acc: 0.8334Epoch 00054: early stopping
+45000/45000 [==============================] - 640s - loss: 0.7927 - acc: 0.8334 - val_loss: 0.4275 - val_acc: 0.8516Using Theano backend.
+Using gpu device 0: GeForce GT 730 (CNMeM is disabled, cuDNN 5004)
+85%
+
+-----------------
+ZeroPadding2D
+one conv layer removed
+dropout, no batch normalization
+10 epoch 66%
+
+82.%
+
+-- rollback to 1606
+reinstate early stopping
+
+128 maps base
+88.% test accuracy after 100 epochs, best result so far, save as convnet.py 26062016
+
+use network input size larger than image ?
+use fmp ?
+The learning rate γ was adapted using a schedule S = e1 , e2 , e3 in which γ is multiplied by a fixed multiplier of 0.1 after e1.e2 and e3 epochs respectively.
+
+todo : implement numpy.append to limit memory usage
+next : try all convnet
+introduire l augmentation sur le test set
+
+88% 05072016
+87.9% 070072016
+
+debug modelallcnn (flatten)
+commit convnet.py on github
+
+zca?
+learning_rate ?
+batch normalization ?
+
+accuracy on test data:  87.27 %
+16072016
+
+also there is now a memory overflow on the GPU, maybe activate memory management by Ubuntu
+must improve structure : display_normalized_image inverses scale
+
+try to output a statistic of layer weights per layer to trace computation errors
+
+TRY GRADIENT CLIPPING
+try keras stride instead of subsampling
+---
+even with gradient clipping, first batch
+
+when early stopping, there is an error on  the number of elements in history
+
+Epoch 200/200
+======] - 1003s - loss: 0.2308 - acc: 0.9191 - val_loss: 0.6928 - val_acc: 0.8223
+overfit : accuracy  92% validation 82% with lamba=0
+
