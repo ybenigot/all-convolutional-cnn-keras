@@ -161,3 +161,9 @@ Epoch 200/200
 ======] - 1003s - loss: 0.2308 - acc: 0.9191 - val_loss: 0.6928 - val_acc: 0.8223
 overfit : accuracy  92% validation 82% with lamba=0
 
+set GPU at max speed by default
+
+17/092016
+loss: 0.3317 - acc: 0.9011 - val_loss: 0.4386 - val_acc: 0.8664
+
+

@@ -9,8 +9,8 @@ from keras.layers.advanced_activations import LeakyReLU
 
 def make_model(input_size):
 
-	maps_count_param=24
-	lambda_param=0.0#0.0001
+	maps_count_param=24 # a higher value like 96 ends up with a Nan loss on GPU
+	lambda_param=0.00001 # a very low value since we have so much parameters
 	alpha_param=0.3
 
 	''' define the model'''

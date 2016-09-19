@@ -10,7 +10,10 @@ the files are :
 - plot.sh plot accuracy
 - learn.sh start training, an optional first argument would be a saved weight files for restarting training from a saved point in time
 
+modification log :
+- shuffle batch samples using skleanr shuffle()
+- set a small lambda for L2 regularization
+
 future modifications :
-- shuffle batch samples
 - recheck input dataset
 

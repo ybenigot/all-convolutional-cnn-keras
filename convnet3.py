@@ -19,6 +19,8 @@ import os
 import plot as pl
 import modelallcnn as mo
 
+from sklearn.utils import shuffle # used for shuffling batch of samples
+
 ############### Parameters ################
 image_size=32
 image_border=16
@@ -133,7 +135,9 @@ class Engine:
 				self.X_batch_current,self.y_batch_current = self.preprocessor.process_data_batch(X_batch, y_batch, avg_per_channel)
 				#print(i,'X_.shape ',X2.shape,'y.shape ',y2.shape,'  y ',y2)
 				yield self.X_batch_current,self.y_batch_current
-			# random shuffle the data set after each batch
+			# random shuffle the data set after each batch to immprove learning
+			print("shuffle X,y")
+			X,y=shuffle(X,y)
 
 	def fit(self,model , X_train, y_train, X_val, y_val, epochs,avg_per_channel):
 		''' train the model '''
